@@ -1,8 +1,8 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { Logger } from "../lib/logger"
-import { assignMessageRefs } from "../lib/message-ids"
-import { checkSession, createSessionState, type WithParts } from "../lib/state"
+import { Logger } from "../src/lib/logger"
+import { assignMessageRefs } from "../src/lib/message-ids"
+import { checkSession, createSessionState, type WithParts } from "../src/lib/state"
 
 function textPart(messageID: string, sessionID: string, id: string, text: string) {
     return {

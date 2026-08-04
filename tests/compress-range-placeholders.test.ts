@@ -1,14 +1,14 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import type { CompressionBlock } from "../lib/state"
+import type { CompressionBlock } from "../src/lib/state"
 import {
     appendMissingBlockSummaries,
     injectBlockPlaceholders,
     parseBlockPlaceholders,
     validateSummaryPlaceholders,
-} from "../lib/compress/range-utils"
-import { wrapCompressedSummary } from "../lib/compress/state"
-import type { BoundaryReference } from "../lib/compress/types"
+} from "../src/lib/compress/range-utils"
+import { wrapCompressedSummary } from "../src/lib/compress/state"
+import type { BoundaryReference } from "../src/lib/compress/types"
 
 function createBlock(blockId: number, body: string): CompressionBlock {
     return {

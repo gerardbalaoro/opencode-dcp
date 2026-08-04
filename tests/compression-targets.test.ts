@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { getActiveCompressionTargets } from "../lib/commands/compression-targets"
-import { createSessionState, type CompressionBlock } from "../lib/state"
+import { getActiveCompressionTargets } from "../src/lib/commands/compression-targets"
+import { createSessionState, type CompressionBlock } from "../src/lib/state"
 
 function buildBlock(
     blockId: number,

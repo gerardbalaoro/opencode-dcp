@@ -3,9 +3,9 @@ import test from "node:test"
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
-import { Logger } from "../lib/logger"
-import { PromptStore } from "../lib/prompts/store"
-import { SYSTEM as SYSTEM_PROMPT } from "../lib/prompts/system"
+import { Logger } from "../src/lib/logger"
+import { PromptStore } from "../src/lib/prompts/store"
+import { SYSTEM as SYSTEM_PROMPT } from "../src/lib/prompts/system"
 
 function createPromptStoreFixture(overrideContent?: string, overrideFileName = "system.md") {
     const rootDir = mkdtempSync(join(tmpdir(), "opencode-dcp-prompts-"))

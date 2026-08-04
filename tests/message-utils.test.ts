@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { isIgnoredUserMessage } from "../lib/messages/query"
-import type { WithParts } from "../lib/state"
+import { isIgnoredUserMessage } from "../src/lib/messages/query"
+import type { WithParts } from "../src/lib/state"
 
 function buildMessage(role: "user" | "assistant", parts: WithParts["parts"]): WithParts {
     const sessionID = "ses_message_utils"

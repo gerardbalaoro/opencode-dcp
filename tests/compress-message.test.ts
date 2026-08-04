@@ -3,10 +3,10 @@ import { mkdtempSync, rmSync } from "node:fs"
 import test, { after } from "node:test"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
-import { createCompressMessageTool } from "../lib/compress/message"
-import { createSessionState, type WithParts } from "../lib/state"
-import type { PluginConfig } from "../lib/config"
-import { Logger } from "../lib/logger"
+import { createCompressMessageTool } from "../src/lib/compress/message"
+import { createSessionState, type WithParts } from "../src/lib/state"
+import type { PluginConfig } from "../src/lib/config"
+import { Logger } from "../src/lib/logger"
 
 const originalXdgDataHome = process.env.XDG_DATA_HOME
 const originalXdgConfigHome = process.env.XDG_CONFIG_HOME

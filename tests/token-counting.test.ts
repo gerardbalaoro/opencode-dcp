@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import type { WithParts } from "../lib/state"
+import type { WithParts } from "../src/lib/state"
 import {
     COMPACTED_TOOL_OUTPUT_PLACEHOLDER,
     countAllMessageTokens,
@@ -8,7 +8,7 @@ import {
     estimateTokensBatch,
     extractCompletedToolOutput,
     extractToolContent,
-} from "../lib/token-utils"
+} from "../src/lib/token-utils"
 
 function buildToolMessage(part: Record<string, any>): WithParts {
     return {

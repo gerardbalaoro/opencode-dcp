@@ -3,15 +3,15 @@ import { mkdtempSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test, { after } from "node:test"
-import type { PluginConfig } from "../lib/config"
+import type { PluginConfig } from "../src/lib/config"
 import {
     createChatMessageTransformHandler,
     createCommandExecuteHandler,
     createEventHandler,
     createSystemPromptHandler,
     createTextCompleteHandler,
-} from "../lib/hooks"
-import { Logger } from "../lib/logger"
+} from "../src/lib/hooks"
+import { Logger } from "../src/lib/logger"
 import {
     createSessionState,
     ensureSessionInitialized,
@@ -19,7 +19,7 @@ import {
     saveManualModeSetting,
     saveSessionState,
     type WithParts,
-} from "../lib/state"
+} from "../src/lib/state"
 
 const originalXdgDataHome = process.env.XDG_DATA_HOME
 const testDataHome = mkdtempSync(join(tmpdir(), "opencode-dcp-hooks-tests-"))

@@ -27,7 +27,7 @@ We look forward to your contributions!
 
 ## Development
 
-Use Node.js 24 and Bun 1.3.14 for local development. The Bun version is pinned in
+Use Node.js >=24.11.0 and Bun 1.3.14 for local development and build tooling. The Bun version is pinned in
 `package.json`.
 
 From the repository root, install dependencies and run the checks with:
@@ -41,5 +41,5 @@ bun run test
 bun run check:package
 ```
 
-The test command uses Node.js's test runner, so keep Node.js 24 available even
+The test command uses Node.js's test runner, so keep Node.js >=24.11.0 available even
 when running project scripts through Bun.

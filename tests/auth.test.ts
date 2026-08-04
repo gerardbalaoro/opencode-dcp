@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { configureClientAuth, getAuthorizationHeader, isSecureMode } from "../lib/auth"
+import { configureClientAuth, getAuthorizationHeader, isSecureMode } from "../src/lib/auth"
 
 type RequestInterceptor = (request: Request) => Request
 

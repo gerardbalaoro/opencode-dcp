@@ -1,8 +1,13 @@
 #!/usr/bin/env bun
 
-import { Logger } from "../lib/logger"
-import { renderSystemPrompt } from "../lib/prompts"
-import { PromptStore, PROMPT_KEYS, type PromptKey, type RuntimePrompts } from "../lib/prompts/store"
+import { Logger } from "../src/lib/logger"
+import { renderSystemPrompt } from "../src/lib/prompts"
+import {
+    PromptStore,
+    PROMPT_KEYS,
+    type PromptKey,
+    type RuntimePrompts,
+} from "../src/lib/prompts/store"
 
 function normalizePromptKey(value: string): PromptKey | null {
     const normalized = value.trim().toLowerCase()

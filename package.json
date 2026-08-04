@@ -18,12 +18,12 @@
         },
         "./tui": {
             "types": "./dist/tui.d.ts",
-            "import": "./tui.tsx"
+            "import": "./src/tui.tsx"
         }
     },
     "scripts": {
         "clean": "rm -rf dist",
-        "build": "bun run clean && tsup && tsc --emitDeclarationOnly",
+        "build": "tsdown && tsc --emitDeclarationOnly",
         "verify:package": "node scripts/verify-package.mjs",
         "check:package": "bun run build && bun run verify:package",
         "prepublishOnly": "bun run check:package",
@@ -73,7 +73,7 @@
         "oxfmt": "0.62.0",
         "oxlint": "1.77.0",
         "solid-js": "1.9.12",
-        "tsup": "^8.5.1",
+        "tsdown": "0.22.14",
         "tsx": "^4.21.0",
         "typescript": "^6.0.2"
     },
@@ -83,8 +83,8 @@
     },
     "files": [
         "dist/",
-        "lib/",
-        "tui.tsx",
+        "src/lib/",
+        "src/tui.tsx",
         "README.md",
         "LICENSE"
     ]

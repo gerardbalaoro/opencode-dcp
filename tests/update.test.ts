@@ -3,7 +3,7 @@ import { join } from "node:path"
 import { tmpdir } from "node:os"
 import test from "node:test"
 import assert from "node:assert/strict"
-import { isAutoUpdatableSpec, isVersionNewer, updateRemoveDir } from "../lib/update"
+import { isAutoUpdatableSpec, isVersionNewer, updateRemoveDir } from "../src/lib/update"
 
 test("isVersionNewer compares semver versions", () => {
     assert.equal(isVersionNewer("3.2.0", "3.1.9"), true)

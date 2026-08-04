@@ -4,7 +4,7 @@ import {
     compressDisabledByOpencode,
     hasExplicitToolPermission,
     resolveEffectiveCompressPermission,
-} from "../lib/host-permissions"
+} from "../src/lib/host-permissions"
 
 test("wildcard deny disables compress", () => {
     assert.equal(compressDisabledByOpencode({ "*": "deny" }), true)

@@ -14,7 +14,7 @@ docs/
 notes/
 
 # Server source file (server runtime ships dist/)
-index.ts
+src/index.ts
 
 # Git
 .git/
