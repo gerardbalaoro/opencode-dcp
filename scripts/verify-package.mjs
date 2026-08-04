@@ -211,15 +211,55 @@ function validateRuntimeImportGraph() {
     }
 }
 
+function normalizePackMetadata(parsed) {
+    if (Array.isArray(parsed)) {
+        if (parsed.length !== 1) {
+            fail("npm pack --dry-run --json returned unexpected package metadata")
+        }
+        return parsed[0]
+    }
+
+    if (parsed && typeof parsed === "object") {
+        if (Array.isArray(parsed.files)) return parsed
+
+        const entries = Object.values(parsed)
+        if (entries.length === 1) return entries[0]
+    }
+
+    fail("npm pack --dry-run --json did not return package metadata")
+}
+
 function validatePackedFiles() {
     const output = execFileSync("npm", ["pack", "--dry-run", "--json"], {
         cwd: root,
         encoding: "utf8",
     })
 
-    const [result] = JSON.parse(output)
-    if (!result || !Array.isArray(result.files)) {
-        fail("npm pack --dry-run --json did not return file metadata")
+    let parsed
+    try {
+        parsed = JSON.parse(output)
+    } catch {
+        fail("npm pack --dry-run --json returned invalid JSON")
+    }
+
+    const result = normalizePackMetadata(parsed)
+    if (
+        !result ||
+        typeof result !== "object" ||
+        Array.isArray(result) ||
+        !Array.isArray(result.files) ||
+        typeof result.name !== "string" ||
+        typeof result.version !== "string"
+    ) {
+        fail("npm pack --dry-run --json did not return valid file metadata")
+    }
+
+    if (
+        result.files.some(
+            (file) => !file || typeof file !== "object" || typeof file.path !== "string",
+        )
+    ) {
+        fail("npm pack --dry-run --json returned invalid file metadata")
     }
 
     const packedPaths = result.files.map((file) => file.path)
