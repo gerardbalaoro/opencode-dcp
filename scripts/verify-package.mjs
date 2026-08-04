@@ -41,6 +41,7 @@ const forbiddenTarballPatterns = [
     /^assets\//,
     /^notes\//,
     /^\.github\//,
+    /^bun\.lock$/,
     /^package-lock\.json$/,
     /^tsconfig\.json$/,
 ]

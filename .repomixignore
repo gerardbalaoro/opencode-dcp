@@ -5,7 +5,7 @@ dist/
 .repomixignore
 repomix-output.xml
 bun.lock
-package-lock.jsonc
+package-lock.json
 LICENSE
 scripts/
 tests/

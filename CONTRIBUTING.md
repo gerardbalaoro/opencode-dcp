@@ -24,3 +24,22 @@ This arrangement ensures the project remains Open Source while providing a path 
 5.  Submit a Pull Request.
 
 We look forward to your contributions!
+
+## Development
+
+Use Node.js 24 and Bun 1.3.14 for local development. The Bun version is pinned in
+`package.json`.
+
+From the repository root, install dependencies and run the checks with:
+
+```sh
+bun install --frozen-lockfile
+bun run lint
+bun run format:check
+bun run typecheck
+bun run test
+bun run check:package
+```
+
+The test command uses Node.js's test runner, so keep Node.js 24 available even
+when running project scripts through Bun.

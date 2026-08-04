@@ -27,8 +27,12 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: "24.x"
-                  cache: npm
                   registry-url: https://registry.npmjs.org
+
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+              with:
+                  bun-version-file: package.json
 
             - name: Check npm version
               id: package
@@ -48,19 +52,23 @@ jobs:
 
             - name: Install dependencies
               if: steps.package.outputs.published == 'false'
-              run: npm ci
+              run: bun install --frozen-lockfile
+
+            - name: Lint
+              if: steps.package.outputs.published == 'false'
+              run: bun run lint
 
             - name: Format check
               if: steps.package.outputs.published == 'false'
-              run: npm run format:check
+              run: bun run format:check
 
             - name: Type check
               if: steps.package.outputs.published == 'false'
-              run: npm run typecheck
+              run: bun run typecheck
 
             - name: Test
               if: steps.package.outputs.published == 'false'
-              run: npm test
+              run: bun run test
 
             - name: Publish
               if: steps.package.outputs.published == 'false'

@@ -1,4 +1,4 @@
-#!/usr/bin/env npx tsx
+#!/usr/bin/env bun
 
 import { Logger } from "../lib/logger"
 import { renderSystemPrompt } from "../lib/prompts"
@@ -34,7 +34,7 @@ if (showHelp) {
 DCP Prompt Preview CLI
 
 Usage:
-  npm run dcp -- [options]
+  bun run dcp -- [options]
 
 Options:
   --list                   List available prompt keys
@@ -49,9 +49,9 @@ Prompt keys:
   context-limit-nudge, turn-nudge, iteration-nudge
 
 Examples:
-  npm run dcp -- --list
-  npm run dcp -- --show compress-range
-  npm run dcp -- --system-all
+  bun run dcp -- --list
+  bun run dcp -- --show compress-range
+  bun run dcp -- --system-all
 `)
     process.exit(0)
 }
