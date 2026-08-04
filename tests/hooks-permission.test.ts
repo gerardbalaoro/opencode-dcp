@@ -138,7 +138,7 @@ test("chat message transform strips hallucinated tags even when compress is deni
     await handler({}, output)
 
     assert.equal(output.messages[0]?.parts[0]?.type, "text")
-    assert.equal((output.messages[0]?.parts[0] as any).text, "alpha  omega")
+    assert.equal((output.messages[0]?.parts[0] as any)?.text, "alpha  omega")
 })
 
 test("chat message transform drops messages without info instead of crashing", async () => {

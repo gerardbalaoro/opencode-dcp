@@ -85,7 +85,7 @@ export class Logger {
 
             const logFile = join(dailyLogDir, `${new Date().toISOString().split("T")[0]}.log`)
             await writeFile(logFile, logLine, { flag: "a" })
-        } catch (error) {}
+        } catch {}
     }
 
     info(message: string, data?: any) {
@@ -186,7 +186,7 @@ export class Logger {
                             }
                             if (part.state?.metadata) {
                                 toolPart.metadata = {
-                                    ...(toolPart.metadata || {}),
+                                    ...toolPart.metadata,
                                     ...part.state.metadata,
                                 }
                             }
@@ -221,6 +221,6 @@ export class Logger {
             const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
             const contextFile = join(contextDir, `${timestamp}.json`)
             await writeFile(contextFile, JSON.stringify(minimized, null, 2))
-        } catch (error) {}
+        } catch {}
     }
 }

@@ -194,7 +194,7 @@ function resolvePromptPaths(workingDirectory: string): PromptPaths {
 }
 
 function stripConditionalTag(content: string, tagName: string): string {
-    const regex = new RegExp(`<${tagName}>[\\s\\S]*?<\/${tagName}>`, "gi")
+    const regex = new RegExp(`<${tagName}>[\\s\\S]*?</${tagName}>`, "gi")
     return content.replace(regex, "")
 }
 

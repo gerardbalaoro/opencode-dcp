@@ -169,7 +169,7 @@ export function formatProgressBar(
     const total = messageIds.length
     if (total === 0) return `│${PRUNED.repeat(width)}│`
 
-    const bar = new Array(width).fill(ACTIVE)
+    const bar = Array.from({ length: width }, () => ACTIVE)
 
     for (let m = 0; m < total; m++) {
         const msgId = messageIds[m]

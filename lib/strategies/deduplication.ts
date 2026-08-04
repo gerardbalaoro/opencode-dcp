@@ -17,7 +17,7 @@ export const deduplicate = (
     state: SessionState,
     logger: Logger,
     config: PluginConfig,
-    messages: WithParts[],
+    _messages: WithParts[],
 ): void => {
     if (state.manualMode && !config.manualMode.automaticStrategies) {
         return

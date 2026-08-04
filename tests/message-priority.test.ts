@@ -535,8 +535,8 @@ test("range-mode nudges inject only once for assistant messages with multiple te
         iterationNudge: "<dcp-system-reminder>Base iteration nudge</dcp-system-reminder>",
     })
 
-    assert.match((messages[1]?.parts[0] as any).text, /Base context nudge/)
-    assert.doesNotMatch((messages[1]?.parts[1] as any).text, /Base context nudge/)
+    assert.match((messages[1]?.parts[0] as any)?.text, /Base context nudge/)
+    assert.doesNotMatch((messages[1]?.parts[1] as any)?.text, /Base context nudge/)
 })
 
 test("range-mode nudges skip empty assistant messages to avoid prefill (issue #463)", () => {
@@ -651,7 +651,7 @@ test("range-mode nudges skip assistant messages with only empty text parts (issu
 
     // Empty text parts should not receive nudge injection
     assert.equal(messages[1]?.parts.length, 1)
-    assert.equal((messages[1]?.parts[0] as any).text, "")
+    assert.equal((messages[1]?.parts[0] as any)?.text, "")
 })
 
 test("message-mode rendered compressed summaries mark block IDs as BLOCKED", () => {
