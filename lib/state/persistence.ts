@@ -42,22 +42,24 @@ export interface PersistedSessionState {
     lastUpdated: string
 }
 
-const STORAGE_DIR = join(
-    process.env.XDG_DATA_HOME || join(homedir(), ".local", "share"),
-    "opencode",
-    "storage",
-    "plugin",
-    "dcp",
-)
+function getStorageDir(): string {
+    return join(
+        process.env.XDG_DATA_HOME || join(homedir(), ".local", "share"),
+        "opencode",
+        "storage",
+        "plugin",
+        "dcp",
+    )
+}
 
-async function ensureStorageDir(): Promise<void> {
-    if (!existsSync(STORAGE_DIR)) {
-        await fs.mkdir(STORAGE_DIR, { recursive: true })
+async function ensureStorageDir(storageDir: string): Promise<void> {
+    if (!existsSync(storageDir)) {
+        await fs.mkdir(storageDir, { recursive: true })
     }
 }
 
-function getSessionFilePath(sessionId: string): string {
-    return join(STORAGE_DIR, `${sessionId}.json`)
+function getSessionFilePath(storageDir: string, sessionId: string): string {
+    return join(storageDir, `${sessionId}.json`)
 }
 
 async function writePersistedSessionState(
@@ -65,9 +67,10 @@ async function writePersistedSessionState(
     state: PersistedSessionState,
     logger: Logger,
 ): Promise<void> {
-    await ensureStorageDir()
+    const storageDir = getStorageDir()
+    await ensureStorageDir(storageDir)
 
-    const filePath = getSessionFilePath(sessionId)
+    const filePath = getSessionFilePath(storageDir, sessionId)
     const content = JSON.stringify(state, null, 2)
     await fs.writeFile(filePath, content, "utf-8")
 
@@ -117,7 +120,7 @@ export async function loadSessionState(
     logger: Logger,
 ): Promise<PersistedSessionState | null> {
     try {
-        const filePath = getSessionFilePath(sessionId)
+        const filePath = getSessionFilePath(getStorageDir(), sessionId)
 
         if (!existsSync(filePath)) {
             return null
@@ -268,16 +271,17 @@ export async function loadAllSessionStats(logger: Logger): Promise<AggregatedSta
     }
 
     try {
-        if (!existsSync(STORAGE_DIR)) {
+        const storageDir = getStorageDir()
+        if (!existsSync(storageDir)) {
             return result
         }
 
-        const files = await fs.readdir(STORAGE_DIR)
+        const files = await fs.readdir(storageDir)
         const jsonFiles = files.filter((f) => f.endsWith(".json"))
 
         for (const file of jsonFiles) {
             try {
-                const filePath = join(STORAGE_DIR, file)
+                const filePath = join(storageDir, file)
                 const content = await fs.readFile(filePath, "utf-8")
                 const state = JSON.parse(content) as PersistedSessionState
 

@@ -1,5 +1,8 @@
 import assert from "node:assert/strict"
-import test from "node:test"
+import { mkdtempSync, rmSync } from "node:fs"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import test, { after } from "node:test"
 import type { PluginConfig } from "../lib/config"
 import {
     createChatMessageTransformHandler,
@@ -17,6 +20,19 @@ import {
     saveSessionState,
     type WithParts,
 } from "../lib/state"
+
+const originalXdgDataHome = process.env.XDG_DATA_HOME
+const testDataHome = mkdtempSync(join(tmpdir(), "opencode-dcp-hooks-tests-"))
+process.env.XDG_DATA_HOME = testDataHome
+
+after(() => {
+    rmSync(testDataHome, { recursive: true, force: true })
+    if (originalXdgDataHome === undefined) {
+        delete process.env.XDG_DATA_HOME
+    } else {
+        process.env.XDG_DATA_HOME = originalXdgDataHome
+    }
+})
 
 function buildConfig(permission: "allow" | "ask" | "deny" = "allow"): PluginConfig {
     return {

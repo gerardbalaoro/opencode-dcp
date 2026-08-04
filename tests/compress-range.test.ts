@@ -1,21 +1,35 @@
 import assert from "node:assert/strict"
-import test from "node:test"
+import { mkdtempSync, rmSync } from "node:fs"
+import test, { after } from "node:test"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
-import { mkdirSync } from "node:fs"
 import { createCompressRangeTool } from "../lib/compress/range"
 import { createSessionState, type WithParts } from "../lib/state"
 import type { PluginConfig } from "../lib/config"
 import { Logger } from "../lib/logger"
 
-const testDataHome = join(tmpdir(), `opencode-dcp-tests-${process.pid}`)
-const testConfigHome = join(tmpdir(), `opencode-dcp-config-tests-${process.pid}`)
+const originalXdgDataHome = process.env.XDG_DATA_HOME
+const originalXdgConfigHome = process.env.XDG_CONFIG_HOME
+const testDataHome = mkdtempSync(join(tmpdir(), "opencode-dcp-tests-"))
+const testConfigHome = mkdtempSync(join(tmpdir(), "opencode-dcp-config-tests-"))
 
 process.env.XDG_DATA_HOME = testDataHome
 process.env.XDG_CONFIG_HOME = testConfigHome
 
-mkdirSync(testDataHome, { recursive: true })
-mkdirSync(testConfigHome, { recursive: true })
+after(() => {
+    rmSync(testDataHome, { recursive: true, force: true })
+    rmSync(testConfigHome, { recursive: true, force: true })
+    if (originalXdgDataHome === undefined) {
+        delete process.env.XDG_DATA_HOME
+    } else {
+        process.env.XDG_DATA_HOME = originalXdgDataHome
+    }
+    if (originalXdgConfigHome === undefined) {
+        delete process.env.XDG_CONFIG_HOME
+    } else {
+        process.env.XDG_CONFIG_HOME = originalXdgConfigHome
+    }
+})
 
 function buildConfig(): PluginConfig {
     return {
