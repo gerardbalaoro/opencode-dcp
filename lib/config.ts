@@ -7,6 +7,8 @@ import type { PluginInput } from "@opencode-ai/plugin"
 type Permission = "ask" | "allow" | "deny"
 type CompressMode = "range" | "message"
 
+const DECIMAL_PERCENT_PATTERN = /^\d+(?:\.\d+)?%$/
+
 export interface Deduplication {
     enabled: boolean
     protectedTools: string[]
@@ -460,7 +462,8 @@ export function validateConfigTypes(config: Record<string, any>): ValidationErro
                 actualValue: unknown = value,
             ): void => {
                 const isValidNumber = typeof value === "number"
-                const isPercentString = typeof value === "string" && value.endsWith("%")
+                const isPercentString =
+                    typeof value === "string" && DECIMAL_PERCENT_PATTERN.test(value)
 
                 if (!isValidNumber && !isPercentString) {
                     errors.push({
@@ -491,7 +494,7 @@ export function validateConfigTypes(config: Record<string, any>): ValidationErro
                 for (const [providerModelKey, limit] of Object.entries(limits)) {
                     const isValidNumber = typeof limit === "number"
                     const isPercentString =
-                        typeof limit === "string" && /^\d+(?:\.\d+)?%$/.test(limit)
+                        typeof limit === "string" && DECIMAL_PERCENT_PATTERN.test(limit)
                     if (!isValidNumber && !isPercentString) {
                         errors.push({
                             key: `${key}.${providerModelKey}`,

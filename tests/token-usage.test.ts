@@ -7,7 +7,13 @@ import { createSessionState, type WithParts } from "../lib/state"
 import type { CompressionBlock } from "../lib/state"
 import { getCurrentTokenUsage } from "../lib/token-utils"
 
-function buildConfig(maxContextLimit: number, minContextLimit = 1): PluginConfig {
+type ContextLimit = PluginConfig["compress"]["maxContextLimit"]
+
+function buildConfig(
+    maxContextLimit: ContextLimit,
+    minContextLimit: ContextLimit = 1,
+    modelMaxLimits?: PluginConfig["compress"]["modelMaxLimits"],
+): PluginConfig {
     return {
         enabled: true,
         debug: false,
@@ -37,6 +43,7 @@ function buildConfig(maxContextLimit: number, minContextLimit = 1): PluginConfig
             summaryBuffer: true,
             maxContextLimit,
             minContextLimit,
+            ...(modelMaxLimits === undefined ? {} : { modelMaxLimits }),
             nudgeFrequency: 5,
             iterationNudgeThreshold: 15,
             nudgeForce: "soft",
@@ -55,6 +62,30 @@ function buildConfig(maxContextLimit: number, minContextLimit = 1): PluginConfig
                 protectedTools: [],
             },
         },
+    }
+}
+
+function buildAssistantUsageMessage(totalTokens: number): WithParts {
+    const sessionID = "ses_percent_limit_usage"
+
+    return {
+        info: {
+            id: "msg-percent-limit-assistant",
+            role: "assistant",
+            sessionID,
+            agent: "assistant",
+            time: { created: 1 },
+            tokens: {
+                input: totalTokens - 1,
+                output: 1,
+                reasoning: 0,
+                cache: {
+                    read: 0,
+                    write: 0,
+                },
+            },
+        } as WithParts["info"],
+        parts: [],
     }
 }
 
@@ -297,4 +328,30 @@ test("isContextOverLimits does not extend the max threshold when summaryBuffer i
     const overLimit = isContextOverLimits(config, state, undefined, undefined, messages)
 
     assert.equal(overLimit.overMaxLimit, true)
+})
+
+test("percentage limits require strict decimal syntax for global and model limits", () => {
+    const state = createSessionState()
+    state.modelContextLimit = 10000
+    const messages = [buildAssistantUsageMessage(1400)]
+
+    const isOverMaxLimit = (limit: string, useModelLimit: boolean): boolean => {
+        const config = buildConfig(
+            useModelLimit ? 0 : (limit as ContextLimit),
+            1,
+            useModelLimit ? { "provider/model": limit as ContextLimit } : undefined,
+        )
+
+        return isContextOverLimits(config, state, "provider", "model", messages).overMaxLimit
+    }
+
+    for (const limit of ["0%", "12%", "12.5%"]) {
+        assert.equal(isOverMaxLimit(limit, false), true, limit)
+        assert.equal(isOverMaxLimit(limit, true), true, limit)
+    }
+
+    for (const limit of ["abc%", "-1%", "+1%", ".5%", "12.%"]) {
+        assert.equal(isOverMaxLimit(limit, false), false, limit)
+        assert.equal(isOverMaxLimit(limit, true), false, limit)
+    }
 })

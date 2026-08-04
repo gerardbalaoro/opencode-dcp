@@ -23,6 +23,7 @@ import { getCurrentTokenUsage } from "../../token-utils"
 import { getActiveSummaryTokenUsage } from "../../state/utils"
 
 const MESSAGE_MODE_NUDGE_PRIORITY: MessagePriority = "high"
+const DECIMAL_PERCENT_PATTERN = /^\d+(?:\.\d+)?%$/
 
 export interface LastUserModelContext {
     providerId: string | undefined
@@ -100,7 +101,7 @@ function resolveContextTokenLimit(
             return limit
         }
 
-        if (!limit.endsWith("%") || state.modelContextLimit === undefined) {
+        if (!DECIMAL_PERCENT_PATTERN.test(limit) || state.modelContextLimit === undefined) {
             return undefined
         }
 
