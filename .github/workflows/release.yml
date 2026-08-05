@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
     release:
-        name: Create release
+        name: Create Release
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -31,7 +31,7 @@ jobs:
                   target-branch: main
 
     publish:
-        name: Publish to npm
+        name: Publish
         needs: release
         if: needs.release.outputs.release_created == 'true'
         runs-on: ubuntu-latest
@@ -39,7 +39,7 @@ jobs:
             contents: read
             id-token: write
         steps:
-            - name: Checkout release
+            - name: Checkout Release
               uses: actions/checkout@v4
               with:
                   ref: ${{ needs.release.outputs.sha }}
@@ -55,25 +55,25 @@ jobs:
               with:
                   bun-version-file: package.json
 
-            - name: Install dependencies
+            - name: Install Dependencies
               run: bun install --frozen-lockfile
 
             - name: Lint
               run: bun run lint
 
-            - name: Format check
+            - name: Check Format
               run: bun run format:check
 
-            - name: Schema check
+            - name: Check Config Schema
               run: bun run schema:check
 
-            - name: Type check
+            - name: Check Types
               run: bun run typecheck
 
-            - name: Tests
+            - name: Run Tests
               run: bun run test
 
-            - name: Check npm version
+            - name: Check Version
               id: package
               run: |
                   NAME=$(node -p "require('./package.json').name")
@@ -89,7 +89,7 @@ jobs:
                       echo "${NAME}@${VERSION} is not published yet."
                   fi
 
-            - name: Skip npm publish
+            - name: Skip Publish
               if: steps.package.outputs.published == 'true'
               run: echo "Skipping npm publish because ${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }} is already published."
 

@@ -1,4 +1,4 @@
-name: PR Checks
+name: Build and Test
 
 on:
     pull_request:
@@ -6,11 +6,11 @@ on:
 
 jobs:
     validate:
-        name: Type Check, Build & Audit
+        name: Build and Test
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout code
+            - name: Checkout Code
               uses: actions/checkout@v4
 
             - name: Setup Node.js
@@ -23,27 +23,27 @@ jobs:
               with:
                   bun-version-file: package.json
 
-            - name: Install dependencies
+            - name: Install Dependencies
               run: bun install --frozen-lockfile
 
             - name: Lint
               run: bun run lint
 
-            - name: Format check
+            - name: Check Format
               run: bun run format:check
 
-            - name: Schema check
+            - name: Check Config Schema
               run: bun run schema:check
 
-            - name: Type check
+            - name: Check Types
               run: bun run typecheck
 
-            - name: Tests
+            - name: Run Tests
               run: bun run test
 
-            - name: Package check
+            - name: Check Package
               run: bun run check:package
 
-            - name: Security audit
+            - name: Security Audit
               run: npm audit --no-package-lock --audit-level=high
               continue-on-error: false
