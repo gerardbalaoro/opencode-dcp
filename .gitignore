@@ -32,9 +32,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Legacy generated prompt files
-lib/prompts/**/*.generated.ts
-
 # Tests
 tests/results/
 notes/
@@ -43,5 +40,3 @@ test-update.ts
 # Documentation (local development only)
 docs/
 SCHEMA_NOTES.md
-
-repomix-output.xml

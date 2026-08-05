@@ -5,9 +5,6 @@
         "module": "ESNext",
         "lib": ["ES2023"],
         "moduleResolution": "bundler",
-        "resolveJsonModule": true,
-        "allowJs": true,
-        "checkJs": false,
         "outDir": "./dist",
         "rootDir": "./src",
         "strict": true,
@@ -16,11 +13,9 @@
         "forceConsistentCasingInFileNames": true,
         "declaration": true,
         "declarationMap": true,
-        "sourceMap": true,
         "jsx": "react-jsx",
         "jsxImportSource": "@opentui/solid",
         "types": ["node"]
     },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist", "logs"]
+    "include": ["src/**/*"]
 }
