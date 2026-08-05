@@ -7,7 +7,6 @@ Automatically reduces token usage in OpenCode by managing conversation context.
 >
 > Support the developer, **[Dan Smolsky on Ko-Fi](https://ko-fi.com/dansmolsky)**
 
-
 ## Installation
 
 Install from the CLI:

@@ -28,11 +28,12 @@
         "build": "bun run schema:generate && tsdown && tsc --emitDeclarationOnly",
         "verify:package": "node scripts/verify-package.mjs",
         "check:package": "bun run build && bun run verify:package",
+        "prepare": "lefthook install",
         "prepublishOnly": "bun run check:package",
         "dev": "opencode plugin dev",
         "typecheck": "tsc --noEmit",
         "test": "node --import tsx --test tests/*.test.ts",
-        "lint": "oxlint .",
+        "lint": "oxlint",
         "format": "oxfmt",
         "format:check": "oxfmt --check",
         "dcp": "bun scripts/print.ts"
@@ -64,6 +65,7 @@
     },
     "dependencies": {
         "@anthropic-ai/tokenizer": "^0.0.4",
+        "@gblab/opencode-dcp": ".",
         "@opencode-ai/sdk": "^1.4.3",
         "jsonc-parser": "^3.3.1",
         "zod": "4.4.3"
@@ -73,6 +75,7 @@
         "@opentui/core": "0.5.1",
         "@opentui/solid": "0.5.1",
         "@types/node": "^24.0.0",
+        "lefthook": "^2.1.10",
         "oxfmt": "0.62.0",
         "oxlint": "1.77.0",
         "solid-js": "1.9.12",
