@@ -1,6 +1,6 @@
 import type { SessionState, ToolStatus, WithParts } from "./index"
 import type { Logger } from "../logger"
-import { PluginConfig } from "../config"
+import type { Config } from "../config"
 import { isMessageCompacted } from "./utils"
 import { countToolTokens } from "../token-utils"
 
@@ -11,7 +11,7 @@ const MAX_TOOL_CACHE_SIZE = 1000
  */
 export function syncToolCache(
     state: SessionState,
-    config: PluginConfig,
+    config: Config,
     logger: Logger,
     messages: WithParts[],
 ): void {

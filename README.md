@@ -55,7 +55,7 @@ Prunes inputs from errored tool calls after a configurable number of turns (defa
 
 DCP uses its own config file, searched in order:
 
-1. Global: `~/.config/opencode/dcp.jsonc` (or `dcp.json`), created automatically on first run
+1. Global (optional): `~/.config/opencode/dcp.jsonc` (or `dcp.json`); absent config files use schema defaults and no file is created
 2. Custom config directory: `$OPENCODE_CONFIG_DIR/dcp.jsonc` (or `dcp.json`), if `OPENCODE_CONFIG_DIR` is set
 3. Project: `.opencode/dcp.jsonc` (or `dcp.json`) in your project's `.opencode` directory
 

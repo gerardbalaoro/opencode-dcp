@@ -1,4 +1,4 @@
-import { getConfig, type PluginConfig } from "../config"
+import { loadConfig as loadDcpConfig, type Config } from "../config"
 import { Logger } from "../logger"
 import { filterMessages } from "../messages/shape"
 import { createSessionState, type SessionState, type WithParts } from "../state"
@@ -8,12 +8,8 @@ import type { TuiApi } from "./types"
 
 export const logger = new Logger(false)
 
-export function loadConfig(api: TuiApi): PluginConfig {
-    return getConfig({
-        client: api.client,
-        directory: api.state.path.directory,
-        worktree: api.state.path.worktree,
-    } as any)
+export function loadConfig(api: TuiApi): Config {
+    return loadDcpConfig(api.state.path.directory)
 }
 
 export function activeSessionID(api: TuiApi): string | undefined {
@@ -36,7 +32,7 @@ export function sessionMessages(api: TuiApi, sessionID: string): WithParts[] {
 export async function buildSessionState(
     sessionID: string,
     messages: WithParts[],
-    config: PluginConfig,
+    config: Config,
 ): Promise<SessionState> {
     const state = createSessionState()
     state.sessionId = sessionID
@@ -63,7 +59,7 @@ export async function buildSessionState(
     return state
 }
 
-export async function loadSessionData(api: TuiApi, config: PluginConfig) {
+export async function loadSessionData(api: TuiApi, config: Config) {
     const sessionID = activeSessionID(api)
     if (!sessionID) return undefined
 

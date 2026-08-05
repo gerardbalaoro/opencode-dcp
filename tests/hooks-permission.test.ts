@@ -3,7 +3,7 @@ import { mkdtempSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test, { after } from "node:test"
-import type { PluginConfig } from "../src/lib/config"
+import type { Config } from "../src/lib/config"
 import {
     createChatMessageTransformHandler,
     createCommandExecuteHandler,
@@ -34,7 +34,7 @@ after(() => {
     }
 })
 
-function buildConfig(permission: "allow" | "ask" | "deny" = "allow"): PluginConfig {
+function buildConfig(permission: "allow" | "ask" | "deny" = "allow"): Config {
     return {
         enabled: true,
         debug: false,

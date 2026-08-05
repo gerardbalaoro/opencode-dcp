@@ -32,6 +32,9 @@ jobs:
             - name: Format check
               run: bun run format:check
 
+            - name: Schema check
+              run: bun run schema:check
+
             - name: Type check
               run: bun run typecheck
 

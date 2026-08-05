@@ -2,7 +2,7 @@
 
 import { compressPermission } from "../compress-permission"
 import { analyzeContextTokens } from "../commands/context"
-import type { PluginConfig } from "../config"
+import type { Config } from "../config"
 import type { SessionState, WithParts } from "../state"
 import { formatTokenCount } from "../ui/utils"
 import { TextAttributes } from "@opentui/core"
@@ -157,7 +157,7 @@ export function StatsDialog(props: { api: TuiApi; report: StatsReport; onBack: (
 export function PanelDialog(props: {
     api: TuiApi
     state: SessionState
-    config: PluginConfig
+    config: Config
     onContext: () => void
     onStats: () => void
     onManual: (enabled: boolean) => void

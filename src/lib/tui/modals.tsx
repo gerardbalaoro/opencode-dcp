@@ -1,7 +1,7 @@
 /** @jsxImportSource @opentui/solid */
 
 import { buildStatsReport } from "../commands/stats"
-import type { PluginConfig } from "../config"
+import type { Config } from "../config"
 import { saveManualModeSetting } from "../state/persistence"
 import { loadSessionData, logger } from "./data"
 import { ContextDialog, PanelDialog, StatsDialog, StatusDialog } from "./dialogs"
@@ -23,7 +23,7 @@ export function showError(api: TuiApi, title: string, error: unknown) {
     showStatusDialog(api, title, "DCP Error", message || "Command failed.")
 }
 
-export function openContextModal(api: TuiApi, config: PluginConfig) {
+export function openContextModal(api: TuiApi, config: Config) {
     runModal(api, "Context", async () => {
         const data = await loadSessionData(api, config)
         if (!data) {
@@ -41,7 +41,7 @@ export function openContextModal(api: TuiApi, config: PluginConfig) {
     })
 }
 
-export function openStatsModal(api: TuiApi, config: PluginConfig) {
+export function openStatsModal(api: TuiApi, config: Config) {
     runModal(api, "Stats", async () => {
         const data = await loadSessionData(api, config)
         if (!data) {
@@ -55,7 +55,7 @@ export function openStatsModal(api: TuiApi, config: PluginConfig) {
     })
 }
 
-export function openPanelModal(api: TuiApi, config: PluginConfig) {
+export function openPanelModal(api: TuiApi, config: Config) {
     runModal(api, "DCP", async () => {
         const data = await loadSessionData(api, config)
         if (!data) {
@@ -82,7 +82,7 @@ function runModal(api: TuiApi, title: string, task: () => Promise<void>) {
 
 async function setManualMode(
     api: TuiApi,
-    config: PluginConfig,
+    config: Config,
     sessionID: string | null | undefined,
     enabled: boolean,
 ) {

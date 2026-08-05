@@ -1,6 +1,6 @@
 import type { SessionState, WithParts } from "../state"
 import type { Logger } from "../logger"
-import type { PluginConfig } from "../config"
+import type { Config } from "../config"
 import { isMessageCompacted } from "../state/utils"
 import { createSyntheticUserMessage, replaceBlockIdsWithBlocked } from "./utils"
 import { getLastUserMessage } from "./query"
@@ -13,7 +13,7 @@ const PRUNED_QUESTION_INPUT_REPLACEMENT = "[questions removed - see output for u
 export const prune = (
     state: SessionState,
     logger: Logger,
-    config: PluginConfig,
+    config: Config,
     messages: WithParts[],
 ): void => {
     filterCompressedRanges(state, logger, config, messages)
@@ -111,7 +111,7 @@ const pruneToolErrors = (state: SessionState, logger: Logger, messages: WithPart
 const filterCompressedRanges = (
     state: SessionState,
     logger: Logger,
-    config: PluginConfig,
+    config: Config,
     messages: WithParts[],
 ): void => {
     if (

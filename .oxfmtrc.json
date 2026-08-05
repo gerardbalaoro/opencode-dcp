@@ -9,5 +9,5 @@
     "bracketSpacing": true,
     "arrowParens": "always",
     "sortPackageJson": false,
-    "ignorePatterns": ["dist", "node_modules", "logs"]
+    "ignorePatterns": ["dist", "node_modules", "logs", "dcp.schema.json"]
 }

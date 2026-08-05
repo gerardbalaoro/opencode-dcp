@@ -1,4 +1,4 @@
-import type { PluginConfig } from "../config"
+import type { Config } from "../config"
 import type { WithParts } from "../state"
 import { isMessageWithInfo } from "./shape"
 
@@ -58,7 +58,7 @@ export const isIgnoredUserMessage = (message: WithParts): boolean => {
     return true
 }
 
-export function isProtectedUserMessage(config: PluginConfig, message: WithParts): boolean {
+export function isProtectedUserMessage(config: Config, message: WithParts): boolean {
     if (!isMessageWithInfo(message)) {
         return false
     }

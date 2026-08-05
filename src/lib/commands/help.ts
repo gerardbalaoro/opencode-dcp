@@ -4,7 +4,7 @@
  */
 
 import type { Logger } from "../logger"
-import type { PluginConfig } from "../config"
+import type { Config } from "../config"
 import type { SessionState, WithParts } from "../state"
 import { compressPermission } from "../compress-permission"
 import { sendIgnoredMessage } from "../ui/notification"
@@ -13,7 +13,7 @@ import { getCurrentParams } from "../token-utils"
 export interface HelpCommandContext {
     client: any
     state: SessionState
-    config: PluginConfig
+    config: Config
     logger: Logger
     sessionId: string
     messages: WithParts[]
@@ -31,7 +31,7 @@ const TOOL_COMMANDS: Record<string, [string, string]> = {
     recompress: ["/dcp recompress <n>", "Re-apply a user-decompressed compression"],
 }
 
-function getVisibleCommands(state: SessionState, config: PluginConfig): [string, string][] {
+function getVisibleCommands(state: SessionState, config: Config): [string, string][] {
     const commands = [...TUI_COMMANDS]
 
     if (compressPermission(state, config) !== "deny") {
@@ -41,7 +41,7 @@ function getVisibleCommands(state: SessionState, config: PluginConfig): [string,
     return commands
 }
 
-export function formatHelpMessage(state: SessionState, config: PluginConfig): string {
+export function formatHelpMessage(state: SessionState, config: Config): string {
     const commands = getVisibleCommands(state, config)
     const colWidth = Math.max(...commands.map(([cmd]) => cmd.length)) + 4
     const lines: string[] = []

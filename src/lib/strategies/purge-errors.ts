@@ -1,4 +1,4 @@
-import { PluginConfig } from "../config"
+import type { Config } from "../config"
 import { Logger } from "../logger"
 import type { SessionState, WithParts } from "../state"
 import {
@@ -19,7 +19,7 @@ import { getTotalToolTokens } from "../token-utils"
 export const purgeErrors = (
     state: SessionState,
     logger: Logger,
-    config: PluginConfig,
+    config: Config,
     _messages: WithParts[],
 ): void => {
     if (state.manualMode && !config.manualMode.automaticStrategies) {

@@ -1,6 +1,6 @@
 import type { SessionState, WithParts } from "./state"
 import type { Logger } from "./logger"
-import type { PluginConfig } from "./config"
+import type { Config } from "./config"
 import { assignMessageRefs } from "./message-ids"
 import {
     buildPriorityMap,
@@ -49,7 +49,7 @@ const INTERNAL_AGENT_SIGNATURES = [
 export function createSystemPromptHandler(
     state: SessionState,
     logger: Logger,
-    config: PluginConfig,
+    config: Config,
     prompts: PromptStore,
 ) {
     return async (
@@ -100,7 +100,7 @@ export function createChatMessageTransformHandler(
     client: any,
     state: SessionState,
     logger: Logger,
-    config: PluginConfig,
+    config: Config,
     prompts: PromptStore,
     hostPermissions: HostPermissionSnapshot,
 ) {
@@ -160,7 +160,7 @@ export function createCommandExecuteHandler(
     client: any,
     state: SessionState,
     logger: Logger,
-    config: PluginConfig,
+    config: Config,
     workingDirectory: string,
     hostPermissions: HostPermissionSnapshot,
 ) {

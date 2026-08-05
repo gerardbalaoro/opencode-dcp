@@ -1,4 +1,4 @@
-import type { PluginConfig } from "../config"
+import type { Config } from "../config"
 import type { SessionState } from "../state"
 import { parseBoundaryId } from "../message-ids"
 import { isIgnoredUserMessage, isProtectedUserMessage } from "../messages/query"
@@ -148,7 +148,7 @@ export function resolveMessages(
     args: CompressMessageToolArgs,
     searchContext: SearchContext,
     state: SessionState,
-    config: PluginConfig,
+    config: Config,
 ): ResolvedMessageCompressionsResult {
     const issues: SkippedIssue[] = []
     const plans: ResolvedMessageCompression[] = []
@@ -194,7 +194,7 @@ function resolveMessage(
     entry: CompressMessageEntry,
     searchContext: SearchContext,
     state: SessionState,
-    config: PluginConfig,
+    config: Config,
 ): ResolvedMessageCompression {
     if (entry.messageId.toUpperCase() === "BLOCKED") {
         throw new SoftIssue("blocked", "BLOCKED", "protected message")

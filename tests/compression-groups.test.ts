@@ -8,7 +8,7 @@ import { createCompressRangeTool } from "../src/lib/compress/range"
 import { handleDecompressCommand } from "../src/lib/commands/decompress"
 import { handleRecompressCommand } from "../src/lib/commands/recompress"
 import { createSessionState, type WithParts } from "../src/lib/state"
-import type { PluginConfig } from "../src/lib/config"
+import type { Config } from "../src/lib/config"
 import { Logger } from "../src/lib/logger"
 
 const originalXdgDataHome = process.env.XDG_DATA_HOME
@@ -34,7 +34,7 @@ after(() => {
     }
 })
 
-function buildConfig(mode: "message" | "range"): PluginConfig {
+function buildConfig(mode: "message" | "range"): Config {
     return {
         enabled: true,
         debug: false,

@@ -1,18 +1,18 @@
-import type { PluginConfig } from "./config"
+import type { Config } from "./config"
 import { type HostPermissionSnapshot, resolveEffectiveCompressPermission } from "./host-permissions"
 import type { SessionState, WithParts } from "./state"
 import { getLastUserMessage } from "./messages/query"
 
 export const compressPermission = (
     state: SessionState,
-    config: PluginConfig,
+    config: Config,
 ): "ask" | "allow" | "deny" => {
     return state.compressPermission ?? config.compress.permission
 }
 
 export const syncCompressPermissionState = (
     state: SessionState,
-    config: PluginConfig,
+    config: Config,
     hostPermissions: HostPermissionSnapshot,
     messages: WithParts[],
 ): void => {

@@ -1,19 +1,19 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import type { PluginConfig } from "../src/lib/config"
+import type { Config } from "../src/lib/config"
 import { isContextOverLimits } from "../src/lib/messages/inject/utils"
 import { wrapCompressedSummary } from "../src/lib/compress/state"
 import { createSessionState, type WithParts } from "../src/lib/state"
 import type { CompressionBlock } from "../src/lib/state"
 import { getCurrentTokenUsage } from "../src/lib/token-utils"
 
-type ContextLimit = PluginConfig["compress"]["maxContextLimit"]
+type ContextLimit = Config["compress"]["maxContextLimit"]
 
 function buildConfig(
     maxContextLimit: ContextLimit,
     minContextLimit: ContextLimit = 1,
-    modelMaxLimits?: PluginConfig["compress"]["modelMaxLimits"],
-): PluginConfig {
+    modelMaxLimits?: Config["compress"]["modelMaxLimits"],
+): Config {
     return {
         enabled: true,
         debug: false,

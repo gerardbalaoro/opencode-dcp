@@ -9,7 +9,7 @@
 
 import type { Logger } from "../logger"
 import type { SessionState, WithParts, ToolParameterEntry } from "../state"
-import type { PluginConfig } from "../config"
+import type { Config } from "../config"
 import { sendIgnoredMessage } from "../ui/notification"
 import { formatPrunedItemsList } from "../ui/utils"
 import { getCurrentParams, getTotalToolTokens } from "../token-utils"
@@ -27,7 +27,7 @@ import { syncToolCache } from "../state/tool-cache"
 export interface SweepCommandContext {
     client: any
     state: SessionState
-    config: PluginConfig
+    config: Config
     logger: Logger
     sessionId: string
     messages: WithParts[]

@@ -3,7 +3,7 @@ import { existsSync, readFileSync, statSync } from "node:fs"
 import { execFileSync } from "node:child_process"
 import path from "node:path"
 import process from "node:process"
-import { fileURLToPath } from "node:url"
+import { fileURLToPath, pathToFileURL } from "node:url"
 
 const require = createRequire(import.meta.url)
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
@@ -78,6 +78,10 @@ function assertPackageJsonShape() {
 
     if (pkg.exports?.["./tui"]?.import !== "./src/tui.tsx") {
         fail("expected package.json exports['./tui'].import to be './src/tui.tsx'")
+    }
+
+    if (typeof pkg.dependencies?.["jsonc-parser"] !== "string") {
+        fail("package.json must declare jsonc-parser as a direct runtime dependency")
     }
 
     const files = Array.isArray(pkg.files) ? pkg.files : []
@@ -175,6 +179,35 @@ function packageLooksCommonJs(pkg) {
     return /(?:^|\/)(cjs|umd)(?:\/|$)/.test(main) || main.endsWith(".cjs")
 }
 
+function validateBuiltRuntimeImport() {
+    const artifact = path.join(root, "dist/index.js")
+
+    try {
+        execFileSync(
+            process.execPath,
+            [
+                "--input-type=module",
+                "--eval",
+                `await import(${JSON.stringify(pathToFileURL(artifact).href)})`,
+            ],
+            {
+                cwd: root,
+                encoding: "utf8",
+                stdio: ["ignore", "pipe", "pipe"],
+            },
+        )
+    } catch (error) {
+        const stderr =
+            error && typeof error === "object" && "stderr" in error && error.stderr
+                ? String(error.stderr).trim()
+                : ""
+        const details = stderr || (error instanceof Error ? error.message : String(error))
+        fail(`unable to import built runtime artifact dist/index.js: ${details}`)
+    }
+
+    console.log("built runtime import passed for dist/index.js")
+}
+
 function validateRuntimeImportGraph() {
     const pending = [path.join(root, "src/index.ts"), path.join(root, "src/tui.tsx")]
     const seen = new Set()
@@ -188,10 +221,6 @@ function validateRuntimeImportGraph() {
         for (const entry of getImportStatements(source)) {
             if (entry.specifier.startsWith(".")) {
                 pending.push(resolveLocalImport(filePath, entry.specifier))
-                continue
-            }
-
-            if (entry.specifier === "jsonc-parser/lib/esm/main.js") {
                 continue
             }
 
@@ -282,5 +311,6 @@ function validatePackedFiles() {
 
 assertRepoFilesExist()
 assertPackageJsonShape()
+validateBuiltRuntimeImport()
 validateRuntimeImportGraph()
 validatePackedFiles()

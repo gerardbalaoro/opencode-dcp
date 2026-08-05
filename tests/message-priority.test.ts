@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import type { PluginConfig } from "../src/lib/config"
+import type { Config } from "../src/lib/config"
 import { createTextCompleteHandler } from "../src/lib/hooks"
 import { Logger } from "../src/lib/logger"
 import { assignMessageRefs } from "../src/lib/message-ids"
@@ -11,7 +11,7 @@ import { buildPriorityMap } from "../src/lib/messages/priority"
 import { stripHallucinationsFromString } from "../src/lib/messages/utils"
 import { createSessionState, type WithParts } from "../src/lib/state"
 
-function buildConfig(mode: "message" | "range" = "message"): PluginConfig {
+function buildConfig(mode: "message" | "range" = "message"): Config {
     return {
         enabled: true,
         debug: false,

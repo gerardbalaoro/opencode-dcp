@@ -7,7 +7,7 @@ import {
     formatTokenCount,
 } from "./utils"
 import { ToolParameterEntry } from "../state"
-import { PluginConfig } from "../config"
+import type { Config } from "../config"
 import { getActiveSummaryTokenUsage } from "../state/utils"
 
 export type PruneReason = "completion" | "noise" | "extraction"
@@ -92,7 +92,7 @@ function truncateExtractedSection(
 export async function sendUnifiedNotification(
     client: any,
     logger: Logger,
-    config: PluginConfig,
+    config: Config,
     state: SessionState,
     sessionId: string,
     pruneToolIds: string[],
@@ -172,7 +172,7 @@ function formatCompressionMetrics(removedTokens: number, summaryTokens: number):
 export async function sendCompressNotification(
     client: any,
     logger: Logger,
-    config: PluginConfig,
+    config: Config,
     state: SessionState,
     sessionId: string,
     entries: CompressionNotificationEntry[],

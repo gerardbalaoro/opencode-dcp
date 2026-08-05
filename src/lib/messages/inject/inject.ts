@@ -1,6 +1,6 @@
 import type { SessionState, WithParts } from "../../state"
 import type { Logger } from "../../logger"
-import type { PluginConfig } from "../../config"
+import type { Config } from "../../config"
 import type { RuntimePrompts } from "../../prompts/store"
 import { formatMessageIdTag } from "../../message-ids"
 import type { CompressionPriorityMap } from "../priority"
@@ -32,7 +32,7 @@ import {
 
 export const injectCompressNudges = (
     state: SessionState,
-    config: PluginConfig,
+    config: Config,
     logger: Logger,
     messages: WithParts[],
     prompts: RuntimePrompts,
@@ -144,7 +144,7 @@ export const injectCompressNudges = (
 
 export const injectMessageIds = (
     state: SessionState,
-    config: PluginConfig,
+    config: Config,
     messages: WithParts[],
     compressionPriorities?: CompressionPriorityMap,
 ): void => {

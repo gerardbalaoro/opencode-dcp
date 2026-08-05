@@ -13,7 +13,5 @@ export default defineConfig({
     nodeProtocol: "strip",
     deps: {
         neverBundle: true,
-        alwaysBundle: [/^jsonc-parser(?:\/|$)/],
-        onlyBundle: [/^jsonc-parser(?:\/|$)/],
     },
 })

@@ -1,4 +1,4 @@
-import type { PluginConfig } from "../config"
+import type { Config } from "../config"
 import type { Logger } from "../logger"
 import type { PromptStore } from "../prompts/store"
 import type { CompressionBlock, CompressionMode, SessionState, WithParts } from "../state"
@@ -7,7 +7,7 @@ export interface ToolContext {
     client: any
     state: SessionState
     logger: Logger
-    config: PluginConfig
+    config: Config
     prompts: PromptStore
 }
 

@@ -1,5 +1,5 @@
 import type { Plugin } from "@opencode-ai/plugin"
-import { getConfig } from "./lib/config"
+import { loadConfig } from "./lib/config"
 import { createCompressMessageTool, createCompressRangeTool } from "./lib/compress"
 import {
     compressDisabledByOpencode,
@@ -20,7 +20,7 @@ import { configureClientAuth, isSecureMode } from "./lib/auth"
 import { startAutoUpdate } from "./lib/update"
 
 const server: Plugin = (async (ctx) => {
-    const config = getConfig(ctx)
+    const config = loadConfig(ctx.directory)
 
     if (!config.enabled) {
         return {}

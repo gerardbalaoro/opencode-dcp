@@ -1,4 +1,4 @@
-import type { PluginConfig } from "../config"
+import type { Config } from "../config"
 import { countAllMessageTokens } from "../token-utils"
 import { isMessageCompacted } from "../state/utils"
 import type { SessionState, WithParts } from "../state"
@@ -18,7 +18,7 @@ export interface CompressionPriorityEntry {
 export type CompressionPriorityMap = Map<string, CompressionPriorityEntry>
 
 export function buildPriorityMap(
-    config: PluginConfig,
+    config: Config,
     state: SessionState,
     messages: WithParts[],
 ): CompressionPriorityMap {

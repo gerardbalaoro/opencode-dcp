@@ -1,5 +1,5 @@
 import type { SessionState, WithParts } from "../../state"
-import type { PluginConfig } from "../../config"
+import type { Config } from "../../config"
 import {
     appendGuidanceToDcpTag,
     buildCompressedBlockGuidance,
@@ -35,11 +35,11 @@ export interface LastNonIgnoredMessage {
     index: number
 }
 
-export function getNudgeFrequency(config: PluginConfig): number {
+export function getNudgeFrequency(config: Config): number {
     return Math.max(1, Math.floor(config.compress.nudgeFrequency || 1))
 }
 
-export function getIterationNudgeThreshold(config: PluginConfig): number {
+export function getIterationNudgeThreshold(config: Config): number {
     return Math.max(1, Math.floor(config.compress.iterationNudgeThreshold || 1))
 }
 
@@ -86,13 +86,13 @@ export function getModelInfo(messages: WithParts[]): LastUserModelContext {
 }
 
 function resolveContextTokenLimit(
-    config: PluginConfig,
+    config: Config,
     state: SessionState,
     providerId: string | undefined,
     modelId: string | undefined,
     threshold: "max" | "min",
 ): number | undefined {
-    const parseLimitValue = (limit: number | `${number}%` | undefined): number | undefined => {
+    const parseLimitValue = (limit: number | string | undefined): number | undefined => {
         if (limit === undefined) {
             return undefined
         }
@@ -131,7 +131,7 @@ function resolveContextTokenLimit(
 }
 
 export function isContextOverLimits(
-    config: PluginConfig,
+    config: Config,
     state: SessionState,
     providerId: string | undefined,
     modelId: string | undefined,
@@ -271,7 +271,7 @@ function collectAnchoredMessages(
 
 function collectTurnNudgeAnchors(
     state: SessionState,
-    config: PluginConfig,
+    config: Config,
     messages: WithParts[],
 ): Set<string> {
     const turnNudgeAnchors = new Set<string>()
@@ -324,7 +324,7 @@ function applyMessageModeAnchoredNudge(
 
 export function applyAnchoredNudges(
     state: SessionState,
-    config: PluginConfig,
+    config: Config,
     messages: WithParts[],
     prompts: RuntimePrompts,
     compressionPriorities?: CompressionPriorityMap,
