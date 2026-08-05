@@ -239,7 +239,7 @@ export type Config = z.infer<typeof ConfigSchema>
 export type JSONSchema = z.core.JSONSchema.JSONSchema
 
 const CONFIG_SCHEMA_ID =
-    "https://raw.githubusercontent.com/Opencode-DCP/opencode-dynamic-context-pruning/master/dcp.schema.json"
+    "https://raw.githubusercontent.com/gerardbalaoro/opencode-dcp/main/dcp.schema.json"
 
 export function getConfigSchema(): JSONSchema {
     const schema = z.toJSONSchema(ConfigSchema, { target: "draft-7", io: "input" })

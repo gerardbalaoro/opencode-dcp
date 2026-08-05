@@ -186,7 +186,7 @@ test("getConfigSchema exposes the draft-07 root metadata", () => {
     assert.equal(schema.$schema, "http://json-schema.org/draft-07/schema#")
     assert.equal(
         schema.$id,
-        "https://raw.githubusercontent.com/Opencode-DCP/opencode-dynamic-context-pruning/master/dcp.schema.json",
+        "https://raw.githubusercontent.com/gerardbalaoro/opencode-dcp/main/dcp.schema.json",
     )
     assert.equal(schema.title, "DCP Plugin Configuration")
     assert.equal(

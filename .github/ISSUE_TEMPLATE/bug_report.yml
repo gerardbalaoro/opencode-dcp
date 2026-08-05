@@ -58,8 +58,8 @@ body:
       id: dcp-version
       attributes:
           label: DCP Version
-          description: Which version of `@tarquinen/opencode-dcp` are you using?
-          placeholder: "e.g. 3.0.4"
+          description: Which version of `@gblab/opencode-dcp` are you using?
+          placeholder: "e.g. 0.1.0"
       validations:
           required: true
 

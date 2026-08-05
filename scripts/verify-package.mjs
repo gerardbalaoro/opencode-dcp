@@ -16,8 +16,9 @@ const builtinNames = new Set([
 const requiredRepoFiles = [
     "dist/index.js",
     "dist/index.d.ts",
+    "dist/tui.js",
     "dist/tui.d.ts",
-    "src/tui.tsx",
+    "dcp.schema.json",
     "README.md",
     "LICENSE",
 ]
@@ -26,15 +27,16 @@ const requiredTarballFiles = [
     "package.json",
     "dist/index.js",
     "dist/index.d.ts",
+    "dist/tui.js",
     "dist/tui.d.ts",
-    "src/tui.tsx",
+    "dcp.schema.json",
     "README.md",
     "LICENSE",
 ]
 
 const forbiddenTarballPatterns = [
     /^node_modules\//,
-    /^src\/index\.ts$/,
+    /^src\//,
     /^tests\//,
     /^scripts\//,
     /^docs\//,
@@ -76,8 +78,18 @@ function assertPackageJsonShape() {
         fail("expected package.json exports['./server'].import to be './dist/index.js'")
     }
 
-    if (pkg.exports?.["./tui"]?.import !== "./src/tui.tsx") {
-        fail("expected package.json exports['./tui'].import to be './src/tui.tsx'")
+    if (pkg.exports?.["./tui"]?.import !== "./dist/tui.js") {
+        fail("expected package.json exports['./tui'].import to be './dist/tui.js'")
+    }
+
+    for (const [name, types] of [
+        [".", "./dist/index.d.ts"],
+        ["./server", "./dist/index.d.ts"],
+        ["./tui", "./dist/tui.d.ts"],
+    ]) {
+        if (pkg.exports?.[name]?.types !== types) {
+            fail(`expected package.json exports['${name}'].types to be '${types}'`)
+        }
     }
 
     if (typeof pkg.dependencies?.["jsonc-parser"] !== "string") {
@@ -85,10 +97,17 @@ function assertPackageJsonShape() {
     }
 
     const files = Array.isArray(pkg.files) ? pkg.files : []
-    for (const entry of ["dist/", "src/lib/", "src/tui.tsx", "README.md", "LICENSE"]) {
+    for (const entry of ["dist/", "dcp.schema.json", "README.md", "LICENSE"]) {
         if (!files.includes(entry)) {
             fail(`package.json files must include ${entry}`)
         }
+    }
+
+    const sourceEntry = files.find(
+        (entry) => typeof entry === "string" && (entry === "src" || entry.startsWith("src/")),
+    )
+    if (sourceEntry) {
+        fail(`package.json files must not include source path ${sourceEntry}`)
     }
 }
 
@@ -98,6 +117,21 @@ function getImportStatements(source) {
         clause: match[1].trim(),
         specifier: match[2],
     }))
+}
+
+function getPackedJavaScriptImportSpecifiers(source) {
+    const specifiers = []
+    const staticPattern = /\b(?:import|export)\s+(?!\()(?:(?:[\s\S]*?)\s+from\s+)?["']([^"']+)["']/g
+    const dynamicPattern = /\bimport\s*\(\s*["']([^"']+)["'](?:\s*,[^)]*)?\)/g
+
+    for (const match of source.matchAll(staticPattern)) {
+        specifiers.push(match[1])
+    }
+    for (const match of source.matchAll(dynamicPattern)) {
+        specifiers.push(match[1])
+    }
+
+    return specifiers
 }
 
 function getImportKind(clause) {
@@ -208,6 +242,35 @@ function validateBuiltRuntimeImport() {
     console.log("built runtime import passed for dist/index.js")
 }
 
+function validateBuiltTuiImport() {
+    const artifact = path.join(root, "dist/tui.js")
+
+    try {
+        execFileSync(
+            process.execPath,
+            [
+                "--input-type=module",
+                "--eval",
+                `const module = await import(${JSON.stringify(pathToFileURL(artifact).href)}); const plugin = module.default; if (!plugin || plugin.id !== "opencode-dcp" || typeof plugin.tui !== "function") throw new Error("expected default TUI plugin module with id and tui function")`,
+            ],
+            {
+                cwd: root,
+                encoding: "utf8",
+                stdio: ["ignore", "pipe", "pipe"],
+            },
+        )
+    } catch (error) {
+        const stderr =
+            error && typeof error === "object" && "stderr" in error && error.stderr
+                ? String(error.stderr).trim()
+                : ""
+        const details = stderr || (error instanceof Error ? error.message : String(error))
+        fail(`unable to import built TUI artifact dist/tui.js: ${details}`)
+    }
+
+    console.log("built TUI import/export shape passed for dist/tui.js")
+}
+
 function validateRuntimeImportGraph() {
     const pending = [path.join(root, "src/index.ts"), path.join(root, "src/tui.tsx")]
     const seen = new Set()
@@ -258,6 +321,64 @@ function normalizePackMetadata(parsed) {
     fail("npm pack --dry-run --json did not return package metadata")
 }
 
+function normalizePackagePath(packagePath) {
+    const normalized = path.posix.normalize(packagePath.replaceAll("\\", "/"))
+    if (normalized === ".") return ""
+    return normalized.startsWith("./") ? normalized.slice(2) : normalized
+}
+
+function isRelativeImportSpecifier(specifier) {
+    return specifier === "." || specifier === ".." || /^\.\.?(?:\/|$)/.test(specifier)
+}
+
+function resolvePackedLocalImport(importerPath, specifier) {
+    const pathSpecifier = specifier.split(/[?#]/, 1)[0]
+    const target = path.posix.normalize(
+        path.posix.join(path.posix.dirname(importerPath), pathSpecifier),
+    )
+
+    if (target === ".." || target.startsWith("../") || path.posix.isAbsolute(target)) {
+        return null
+    }
+
+    return target
+}
+
+function validatePackedJavaScriptImports(packedPaths) {
+    const normalizedPackedPaths = new Set(packedPaths.map(normalizePackagePath))
+    const javascriptPaths = packedPaths
+        .map(normalizePackagePath)
+        .filter((filePath) => /\.(?:cjs|js|mjs)$/.test(filePath))
+
+    for (const importerPath of javascriptPaths) {
+        if (
+            importerPath === "" ||
+            importerPath === ".." ||
+            importerPath.startsWith("../") ||
+            path.posix.isAbsolute(importerPath)
+        ) {
+            fail(`packed JavaScript artifact escapes the package root: ${importerPath}`)
+        }
+
+        const artifactPath = path.join(root, ...importerPath.split("/"))
+        if (!existsSync(artifactPath) || !statSync(artifactPath).isFile()) {
+            fail(`packed JavaScript artifact is not present in the repository: ${importerPath}`)
+        }
+
+        const source = readFileSync(artifactPath, "utf8")
+        for (const specifier of getPackedJavaScriptImportSpecifiers(source)) {
+            if (!isRelativeImportSpecifier(specifier)) continue
+
+            const targetPath = resolvePackedLocalImport(importerPath, specifier)
+            if (targetPath && !normalizedPackedPaths.has(targetPath)) {
+                fail(`${importerPath} imports missing packed local artifact ${targetPath}`)
+            }
+        }
+    }
+
+    console.log(`packed JavaScript import graph passed for ${javascriptPaths.length} artifacts`)
+}
+
 function validatePackedFiles() {
     const output = execFileSync("npm", ["pack", "--dry-run", "--json"], {
         cwd: root,
@@ -292,10 +413,16 @@ function validatePackedFiles() {
     }
 
     const packedPaths = result.files.map((file) => file.path)
+    const normalizedPackedPaths = packedPaths.map(normalizePackagePath)
     for (const required of requiredTarballFiles) {
         if (!packedPaths.includes(required)) {
             fail(`packed tarball is missing ${required}`)
         }
+    }
+
+    const declarationMap = normalizedPackedPaths.find((file) => file.endsWith(".d.ts.map"))
+    if (declarationMap) {
+        fail(`packed tarball contains forbidden declaration map ${declarationMap}`)
     }
 
     const forbidden = packedPaths.find((file) =>
@@ -305,6 +432,8 @@ function validatePackedFiles() {
         fail(`packed tarball contains forbidden path ${forbidden}`)
     }
 
+    validatePackedJavaScriptImports(packedPaths)
+
     console.log(`package verification passed for ${result.name}@${result.version}`)
     console.log(`tarball entries: ${result.entryCount}`)
 }
@@ -312,5 +441,6 @@ function validatePackedFiles() {
 assertRepoFilesExist()
 assertPackageJsonShape()
 validateBuiltRuntimeImport()
+validateBuiltTuiImport()
 validateRuntimeImportGraph()
 validatePackedFiles()
