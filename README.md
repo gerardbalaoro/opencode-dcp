@@ -1,13 +1,12 @@
 # OpenCode Dynamic Context Pruning
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/dansmolsky)
-[![npm version](https://img.shields.io/npm/v/@gblab/opencode-dcp.svg)](https://www.npmjs.com/package/@gblab/opencode-dcp)
-
 Automatically reduces token usage in OpenCode by managing conversation context.
 
+> [!IMPORTANT]
 > This is a fork of [the original plugin](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning). It modernizes the tooling with Bun/Oxc/tsdown, adds a generated Zod config schema and stricter config/package validation, and includes additional packaging, state, and authentication coverage and fixes.
+>
+> Support the developer, **[Dan Smolsky on Ko-Fi](https://ko-fi.com/dansmolsky)**
 
-![DCP in action](assets/images/dcp-demo9.png)
 
 ## Installation
 
@@ -18,17 +17,6 @@ opencode plugin @gblab/opencode-dcp@latest --global
 ```
 
 This installs the package and adds it to your global OpenCode config.
-
-## Project Status
-
-Development on DCP has slowed because most new context-management work has moved to [Sleev](https://sleev.ai) and the `sleev` CLI. Sleev is a local proxy for Claude Code, Codex, and OpenCode that builds on DCP's core ideas with newer context-management features and will work with any harness/client.
-
-DCP remains available for OpenCode plugin users, but new features are landing in Sleev first. If you are starting fresh, we recommend trying Sleev:
-
-```bash
-npm i -g sleev
-sleev
-```
 
 ## How It Works
 
