@@ -41,8 +41,8 @@ jobs:
             - name: Run Tests
               run: bun run test
 
-            - name: Check Package
-              run: bun run check:package
+            - name: Build Package
+              run: bun run build
 
             - name: Security Audit
               run: npm audit --no-package-lock --audit-level=high

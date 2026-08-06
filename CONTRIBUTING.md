@@ -38,7 +38,7 @@ bun run lint
 bun run format:check
 bun run typecheck
 bun run test
-bun run check:package
+bun run build
 ```
 
 The test command uses Node.js's test runner, so keep Node.js >=24.11.0 available even
