@@ -20,6 +20,8 @@ jobs:
         outputs:
             release_created: ${{ steps.release.outputs.release_created }}
             sha: ${{ steps.release.outputs.sha }}
+            prs_created: ${{ steps.release.outputs.prs_created }}
+            pr: ${{ steps.release.outputs.pr }}
         steps:
             - name: Release Please
               id: release
@@ -29,6 +31,112 @@ jobs:
                   config-file: release-please-config.json
                   manifest-file: .release-please-manifest.json
                   target-branch: main
+
+    release-format:
+        name: Apply Formatting
+        needs: release
+        if: needs.release.outputs.prs_created == 'true'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Validate Release PR
+              id: validate
+              env:
+                  PR_JSON: ${{ needs.release.outputs.pr }}
+              run: |
+                  set -euo pipefail
+
+                  if [[ -z "$PR_JSON" ]]; then
+                      echo "Release Please did not provide PR JSON." >&2
+                      exit 1
+                  fi
+
+                  branch=$(jq -er '
+                      if type != "object" then
+                          error("Release PR output must be a JSON object")
+                      elif .baseBranchName != "main" then
+                          error("Unexpected release PR base branch")
+                      elif .headBranchName != "release-please--branches--main--components--opencode-dcp" then
+                          error("Unexpected release PR head branch")
+                      else
+                          .headBranchName
+                      end
+                  ' <<<"$PR_JSON")
+                  printf 'branch=%s\n' "$branch" >>"$GITHUB_OUTPUT"
+
+            - name: Checkout Release Branch
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ steps.validate.outputs.branch }}
+                  fetch-depth: 2
+                  persist-credentials: false
+
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+              with:
+                  bun-version-file: package.json
+
+            - name: Install Dependencies
+              run: bun install --frozen-lockfile --ignore-scripts
+
+            - name: Amend Release Commit
+              id: format
+              run: |
+                  set -euo pipefail
+
+                  expected_sha=$(git rev-parse HEAD)
+                  git rev-parse HEAD^ >/dev/null
+
+                  files=()
+                  while IFS= read -r -d '' path; do
+                      if [[ -f "$path" && ! -L "$path" ]]; then
+                          files+=("$path")
+                      fi
+                  done < <(git diff --name-only -z --diff-filter=ACMRT HEAD^ HEAD)
+
+                  if [[ -n "$(git status --porcelain=v1 --untracked-files=all)" ]]; then
+                      echo "Release branch checkout is dirty before formatting." >&2
+                      git status --short >&2
+                      exit 1
+                  fi
+
+                  if ((${#files[@]} == 0)); then
+                      echo "No current files changed by the release commit; nothing to format."
+                      echo "changed=false" >>"$GITHUB_OUTPUT"
+                      exit 0
+                  fi
+
+                  bun run format -- -- "${files[@]}"
+                  git add -- "${files[@]}"
+
+                  if git diff --cached --quiet; then
+                      echo "Formatting made no changes."
+                      echo "changed=false" >>"$GITHUB_OUTPUT"
+                      exit 0
+                  fi
+
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git -c core.hooksPath=/dev/null commit --amend --no-edit
+
+                  echo "changed=true" >>"$GITHUB_OUTPUT"
+                  echo "expected_sha=$expected_sha" >>"$GITHUB_OUTPUT"
+
+            - name: Push Amended Release Commit
+              if: steps.format.outputs.changed == 'true'
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
+                  RELEASE_BRANCH: ${{ steps.validate.outputs.branch }}
+                  EXPECTED_SHA: ${{ steps.format.outputs.expected_sha }}
+              run: |
+                  set -euo pipefail
+
+                  git -c 'credential.helper=!f() { printf "username=x-access-token\npassword=%s\n" "$GITHUB_TOKEN"; }; f' \
+                      push \
+                      --force-with-lease="refs/heads/${RELEASE_BRANCH}:${EXPECTED_SHA}" \
+                      origin \
+                      "HEAD:refs/heads/${RELEASE_BRANCH}"
 
     publish:
         name: Publish
