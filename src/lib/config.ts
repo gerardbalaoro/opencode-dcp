@@ -251,6 +251,7 @@ export function getConfigSchema(): JSONSchema {
     schema.$id = CONFIG_SCHEMA_ID
     schema.title = "DCP Plugin Configuration"
     schema.description = "Configuration schema for the OpenCode Dynamic Context Pruning plugin"
+    schema.allowTrailingCommas = true
 
     return schema
 }

@@ -11,4 +11,4 @@ pre-commit:
           stage_fixed: true
         - name: generate schema
           glob: "src/lib/config.ts"
-          run: bun run schema:generate && bun run format --write dcp.schema.json
+          run: bun run schema:generate
