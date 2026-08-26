@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.2.0](https://github.com/gerardbalaoro/opencode-dcp/compare/v0.1.0...v0.2.0) (2026-08-26)
+
+### Features
+
+- allow trailing commas in config schema ([e80a065](https://github.com/gerardbalaoro/opencode-dcp/commit/e80a065543c0f685e93974c82f439580a82ca3c9))
+
+### Bug Fixes
+
+- detect internal agents from primary system prompt only ([d455619](https://github.com/gerardbalaoro/opencode-dcp/commit/d455619e06ef010053daf383b937f615abc60f23))
+- detect internal agents from primary system prompt only ([e2047e2](https://github.com/gerardbalaoro/opencode-dcp/commit/e2047e2e851a8f4472bc27b023242f86c31a82bf))
+- dev/peerDependencies update ([838581a](https://github.com/gerardbalaoro/opencode-dcp/commit/838581a34bdd1c5d2297c12aac21a0eb5fd59fb3))
+- install compatible OpenTUI dependencies ([1169803](https://github.com/gerardbalaoro/opencode-dcp/commit/116980391f6a729c9a7b81c8496206c38e8d2e75))
+- install OpenTUI runtime dependencies ([c14ae4c](https://github.com/gerardbalaoro/opencode-dcp/commit/c14ae4c1ddf694373141cf64d23f815a5906023e))
+- normalize a single backslash so protectedFilePatterns work on Windows ([5fd2335](https://github.com/gerardbalaoro/opencode-dcp/commit/5fd233569e5b5805a36a6756f3e0003cb1cecc69))
+- peer/devDependencies update to &gt;=0.4.2, ^0.5.0 respectively for @opentui/core and /solid ([77d800b](https://github.com/gerardbalaoro/opencode-dcp/commit/77d800b8434272a92b46c54e880f5a60488405fe))
+- reset compress-pending manual mode after compression ([1d1f5c5](https://github.com/gerardbalaoro/opencode-dcp/commit/1d1f5c5339c49da6aff40d451c51045bcb29f5f9))
+- reset compress-pending manual mode after compression ([9f9a185](https://github.com/gerardbalaoro/opencode-dcp/commit/9f9a185b86629ee7139a583f0307c4f94256f4eb))
+- restore manual mode after compression ([42ac1a0](https://github.com/gerardbalaoro/opencode-dcp/commit/42ac1a0e77a78c8fa8d37e104fe2346f55ed5bec))
+- strip injected message-id suffix before paired tag regex ([264aa0d](https://github.com/gerardbalaoro/opencode-dcp/commit/264aa0d92904045f5cbb4130edc824330bb342b5))
+- strip injected message-id suffix before paired tag regex ([f236e0d](https://github.com/gerardbalaoro/opencode-dcp/commit/f236e0de9a02503efac9a69cb1efccf47617d135)), closes [#556](https://github.com/gerardbalaoro/opencode-dcp/issues/556)
+- strip trailing mXXXX&lt;/parameter&gt; hallucinations ([35616fb](https://github.com/gerardbalaoro/opencode-dcp/commit/35616fb56cc8fc5f687cffbbf3f7fef40a076c46))
+- strip trailing mXXXX&lt;/parameter&gt; hallucinations ([acb1fdc](https://github.com/gerardbalaoro/opencode-dcp/commit/acb1fdc583e10b43219aeac969835c8695d7b101)), closes [#555](https://github.com/gerardbalaoro/opencode-dcp/issues/555)
+- update vulnerable brace expansion ([25417d2](https://github.com/gerardbalaoro/opencode-dcp/commit/25417d2befe557954992fc2569af94b0b23c9c97))
+
 ## 0.1.0 (2026-08-06)
 
 ### Features
